@@ -22,9 +22,6 @@ project_types = {
     18: "CONCRETE_DEEP_BEAM"
 }
 
-# Mapping simplified names back to the full formatted names for RSA
-formatted_project_types = {key: f"I_PT_{value}" for key, value in project_types.items()}
-
 # Function to initialize RSA with the user-selected project type
 def initialize_robot_with_project_type():
     # Display project types to the user
@@ -50,9 +47,9 @@ def initialize_robot_with_project_type():
             # Check if a project is active or if it matches the selected type
             if not Robot.Project.IsActive or Robot.Project.Type != user_choice:
                 Robot.Project.New(user_choice)
-                print(f"{formatted_project_types[user_choice]} ({project_types[user_choice]}) project created successfully!")
+                print(f"{project_types[user_choice]} project created successfully!")
             else:
-                print(f"An active {formatted_project_types[user_choice]} ({project_types[user_choice]}) project already exists.")
+                print(f"An active {project_types[user_choice]} project already exists.")
         except Exception as e:
             print(f"Failed to initialize Robot Structural Analysis or create the project: {e}")
     except ValueError:
