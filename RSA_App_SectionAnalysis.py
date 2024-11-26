@@ -1,26 +1,29 @@
 import win32com.client
 
-# Corrected project types as per the document (pages 43–44)
+# Corrected project types with simplified names for user prompt
 project_types = {
-    1: "I_PT_FRAME_2D",
-    2: "I_PT_TRUSS_2D",
-    3: "I_PT_GRILLAGE",
-    4: "I_PT_FRAME_3D",
-    5: "I_PT_TRUSS_3D",
-    6: "I_PT_PLATE",
-    7: "I_PT_SHELL",
-    8: "I_PT_AXISYMMETRIC",
-    9: "I_PT_VOLUMETRIC",
-    10: "I_PT_CONCRETE_BEAM",
-    11: "I_PT_CONCRETE_COLUMN",
-    12: "I_PT_FOUNDATION",
-    13: "I_PT_PARAMETRIZED",
-    14: "I_PT_STEEL_CONNECTION",
-    15: "I_PT_SECTION",
-    16: "I_PT_PLANE_STRESS",
-    17: "I_PT_PLANE_DEFORMATION",
-    18: "I_PT_CONCRETE_DEEP_BEAM"
+    1: "FRAME_2D",
+    2: "TRUSS_2D",
+    3: "GRILLAGE",
+    4: "FRAME_3D",
+    5: "TRUSS_3D",
+    6: "PLATE",
+    7: "SHELL",
+    8: "AXISYMMETRIC",
+    9: "VOLUMETRIC",
+    10: "CONCRETE_BEAM",
+    11: "CONCRETE_COLUMN",
+    12: "FOUNDATION",
+    13: "PARAMETRIZED",
+    14: "STEEL_CONNECTION",
+    15: "SECTION",
+    16: "PLANE_STRESS",
+    17: "PLANE_DEFORMATION",
+    18: "CONCRETE_DEEP_BEAM"
 }
+
+# Mapping simplified names back to the full formatted names for RSA
+formatted_project_types = {key: f"I_PT_{value}" for key, value in project_types.items()}
 
 # Function to initialize RSA with the user-selected project type
 def initialize_robot_with_project_type():
@@ -47,9 +50,9 @@ def initialize_robot_with_project_type():
             # Check if a project is active or if it matches the selected type
             if not Robot.Project.IsActive or Robot.Project.Type != user_choice:
                 Robot.Project.New(user_choice)
-                print(f"{project_types[user_choice]} project created successfully!")
+                print(f"{formatted_project_types[user_choice]} ({project_types[user_choice]}) project created successfully!")
             else:
-                print(f"An active {project_types[user_choice]} project already exists.")
+                print(f"An active {formatted_project_types[user_choice]} ({project_types[user_choice]}) project already exists.")
         except Exception as e:
             print(f"Failed to initialize Robot Structural Analysis or create the project: {e}")
     except ValueError:
