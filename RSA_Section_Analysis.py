@@ -48,29 +48,26 @@ def collect_user_inputs():
 def create_nodes_and_bars(robot, slab_levels, wall_details, section_width):
     try:
         geometry = robot.Project.Structure.Nodes
+        bars = robot.Project.Structure.Bars
         node_id = 1
-        for slab in slab_levels:
-            geometry.Create(node_id, 0, 0, slab["level"])
-            geometry.Create(node_id + 1, section_width, 0, slab["level"])
-            node_id += 2
 
+        # Create nodes for each slab level
+        for slab in slab_levels:
+            geometry.Create(node_id, 0, 0, slab["level"])  # Start node
+            geometry.Create(node_id + 1, section_width, 0, slab["level"])  # End node
+            bars.Create(node_id, node_id, node_id + 1)  # Create bar between nodes
+            node_id += 2  # Increment for next pair of nodes
+
+        # Create nodes and bars for the walls
         left_wall_base_id = node_id
+        right_wall_base_id = node_id + 2
         geometry.Create(left_wall_base_id, 0, 0, wall_details["left"]["toe_level"])
         geometry.Create(left_wall_base_id + 1, 0, 0, wall_details["left"]["top_level"])
+        bars.Create(left_wall_base_id, left_wall_base_id, left_wall_base_id + 1)
 
-        right_wall_base_id = node_id + 2
         geometry.Create(right_wall_base_id, section_width, 0, wall_details["right"]["toe_level"])
         geometry.Create(right_wall_base_id + 1, section_width, 0, wall_details["right"]["top_level"])
-
-        bars = robot.Project.Structure.Bars
-        bar_id = 1
-        for i in range(0, len(slab_levels) * 2, 2):
-            bars.Create(bar_id, i + 1, i + 2)
-            bar_id += 1
-
-        bars.Create(bar_id, left_wall_base_id, left_wall_base_id + 1)
-        bar_id += 1
-        bars.Create(bar_id, right_wall_base_id, right_wall_base_id + 1)
+        bars.Create(right_wall_base_id, right_wall_base_id, right_wall_base_id + 1)
 
         print("Nodes and bars created successfully!")
     except Exception as e:
